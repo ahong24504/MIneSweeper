@@ -1,6 +1,6 @@
 <template>
-  <div class="main-frame">
-    <a href="javascript:;" class="grid">
+  <div class="main-frame" >
+    <a href="javascript:;" class="grid" title="来，踩我">
       <div
         @contextmenu.prevent="rightClick(index)"
         @click="leftClick(index)"
@@ -76,6 +76,7 @@ export default {
       }
     },
     leftClick(index) {
+      this.$emit("timerInfo","start")
       if (
         this.bombInfo[index].isOpen === true ||
         this.bombInfo[index].stateInfo === 1
@@ -90,31 +91,13 @@ export default {
         }
         setTimeout(() => {
           if (confirm("踩雷了，点击确定重新开始，点击取消关闭游戏")) {
-            this.$store.dispatch("flegCE")
+            this.$store.dispatch("flegCE");
             this.$router.go(0);
           } else {
             window.open("about:blank", "_self").close();
           }
         }, 500);
       }
-      // if (this.bombInfo[index].bombState !== true) {
-      //   this.bombInfo[index].stateInfo = -1;
-      //   this.bombInfo[index].isOpen = true;
-      //   console.log(this.bombInfo);
-      // } else {
-      //   for (let i in this.bombInfo) {
-      //     if (this.bombInfo[i].bombState === true) {
-      //       this.bombInfo[i].stateInfo = -2;
-      //     }
-      //   }
-      //   setTimeout(() => {
-      //     if (confirm("踩雷了，点击确定重新开始，点击取消关闭游戏")) {
-      //       this.$router.go(0);
-      //     } else {
-      //       window.open("about:blank", "_self").close();
-      //     }
-      //   }, 100);
-      // }
 
       // 点击后顺便打开周围不是雷的格子，递归
 
@@ -128,10 +111,6 @@ export default {
           secendArry[i][j].stateInfo = -1;
         }
         if (secendArry[i][j].bombNum === 0) {
-          // console.log("hahah")
-          /**
-           * 写到这了
-           */
           if (
             i > 0 &&
             j > 0 &&
@@ -174,6 +153,25 @@ export default {
       let secendArry = changeArrGroup(this.bombInfo, 30);
 
       openCell(secendArry, i, j);
+
+      // 判断胜利 所有不是雷的格子都是打开状态，胜利
+      let isNotBomb = [];
+      let isOpenArry = [];
+      for (let i in this.bombInfo) {
+        this.bombInfo[i].bombState === false &&
+          isNotBomb.push(this.bombInfo[i]);
+        this.bombInfo[i].isOpen === true && isOpenArry.push(this.bombInfo[i]);
+      }
+      if (JSON.stringify(isNotBomb) === JSON.stringify(isOpenArry)) {
+        setTimeout(() => {
+          if (confirm("恭喜获得胜利，点击确定重新开始，点击取消关闭游戏")) {
+            this.$store.dispatch("flegCE");
+            this.$router.go(0);
+          } else {
+            window.open("about:blank", "_self").close();
+          }
+        }, 500);
+      }
     },
   },
   created() {
@@ -182,7 +180,7 @@ export default {
 
     // 数组前40个元素为雷，后440个不是雷
     for (let i = 0; i < 480; i++) {
-      if (i < 60) {
+      if (i < 70) {
         newArry[i] = new Bomb(true, 0);
       } else {
         newArry[i] = new Bomb(false, 0);
@@ -227,8 +225,6 @@ export default {
         secendArry[i][j].bombNum = c;
       }
     }
-    // 二维数组转一维数组，抄的
-    // this.bombInfo = [].concat.apply([], secendArry)
   },
 };
 </script>

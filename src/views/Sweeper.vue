@@ -2,24 +2,37 @@
   <div class="sweeper">
     <div class="inside-sweeper">
       <nav-bar></nav-bar>
-      <re-start></re-start>
-      <main-frame></main-frame>
+      <re-start :Timer="Timer"></re-start>
+      <main-frame @timerInfo="changeTimer"></main-frame>
     </div>
   </div>
 </template>
 
 <script>
-import ReStart from './ChildrenSweeper/ReStart'
-import NavBar from './ChildrenSweeper/NavBar'
-import MainFrame from './ChildrenSweeper/MainFrame'
+import ReStart from "./ChildrenSweeper/ReStart";
+import NavBar from "./ChildrenSweeper/NavBar";
+import MainFrame from "./ChildrenSweeper/MainFrame";
 
 export default {
   name: "Sweeper",
-  components:{
+  data() {
+    return {
+      Timer: "",
+    };
+  },
+  components: {
     ReStart,
     NavBar,
-    MainFrame
-  }
+    MainFrame,
+  },
+  methods: {
+    changeTimer(val) {
+      if (val === "start" && this.Timer === "start") return;
+      if (val === "start" && this.Timer !== "start") this.Timer = val;
+      if (val === "end") this.Timer = val;
+      console.log(this.Timer)
+    },
+  },
 };
 </script>
 
@@ -29,7 +42,7 @@ export default {
   background: rgb(242, 245, 242);
   /* height: 5000px; */
 }
-.inside-sweeper{
+.inside-sweeper {
   margin: auto;
   width: 1200px;
   background: rgb(235, 243, 235);

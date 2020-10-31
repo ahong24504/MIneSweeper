@@ -24,11 +24,23 @@ export default {
   name: "ReStart",
   data() {
     return {
-      bombCount: 60,
-      time: 0,
+      bombCount: 70,
+      time: "",
       isOver: false,
-      isWin:false
+      isWin: false,
     };
+  },
+  props: {
+    Timer: {
+      type: String,
+      default: "默认的Timer",
+    },
+  },
+  watch: {
+    Timer(newVal,oldVal){
+      console.log(newVal + "-" + oldVal)
+      console.log(oldVal === "")
+    }
   },
   
 };
@@ -43,7 +55,7 @@ export default {
   font-size: 20px;
   color: rgb(56, 52, 52);
   padding: 5px 0;
-  box-shadow: 0 2px 1px rgba(0, 0, 0, .1) ;
+  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
 }
 .nav-bar > * {
   flex: 1;
